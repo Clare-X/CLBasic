@@ -1,37 +1,32 @@
 # You may modify Makefile as your like
 # but you should keep `make clean` and `make` works correct
 
-PROGRAM = Basic
+PROGRAM = code
 
 CXX = g++
-CXXFLAGS = -IStanfordCPPLib -fvisibility-inlines-hidden -g
+CXXFLAGS = -IStanfordCPPLib -fvisibility-inlines-hidden -g -std=c++11
 
-CPP_FILES = $(wildcard *.cpp)
-H_FILES = $(wildcard *.h)
+CPP_FILES = $(wildcard Basic/*.cpp)
+H_FILES = $(wildcard Basic/*.h)
 
 LDOPTIONS = -L.
 LIB = -lStanfordCPPLib
 
-all: $(PROGRAM) spl.jar score
+all: $(PROGRAM) spl.jar
 
 $(PROGRAM): $(CPP_FILES) $(H_FILES) libStanfordCPPLib.a
 	$(CXX) -o $(PROGRAM) $(CXXFLAGS) $(LDOPTIONS) $(CPP_FILES) $(LIB)
 
-score: ../Test/score
-	ln -s ../Test/score .
-
-../Test/score:
-	(cd ../Test; make)
-
 libStanfordCPPLib.a:
-	@rm -f ../libStanfordCPPLib.a
-	(cd ../StanfordCPPLib; make all)
-	ln -s ../StanfordCPPLib/libStanfordCPPLib.a .
+	@rm -f libStanfordCPPLib.a
+	(cd StanfordCPPLib; make all)
+	ln -s StanfordCPPLib/libStanfordCPPLib.a .
 
 spl.jar:
-	ln -s ../StanfordCPPLib/spl.jar .
+	ln -s StanfordCPPLib/spl.jar .
 
 tidy:
+	(cd StanfordCPPLib; make clean)
 	rm -f ,* .,* *~ core a.out *.err
 
 clean scratch: tidy
